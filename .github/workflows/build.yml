@@ -1,0 +1,28 @@
+name: Build APK
+
+on:
+  pull_request:
+    branches: ['developer', 'main']
+  push:
+    branches: ['developer', 'main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.16.9'  # Specify your Flutter version
+      - run: flutter pub get
+      - run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: "build/app/outputs/flutter-apk/app-release.apk"
